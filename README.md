@@ -1,4 +1,4 @@
-# QRCode Scanner plugin for Flutter
+# QRCode Reader plugin for Flutter
 
 A Flutter plugin, currently for Android only, for reading QR Codes with the camera.
 
