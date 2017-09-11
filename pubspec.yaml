@@ -1,0 +1,18 @@
+name: qrcode_reader
+
+description: Flutter plugin that lets you read a QR Code.
+author: Matheus Villela <matheusvillela@gmail.com>
+homepage: https://github.com/villela/flutter_qrcode_reader
+version: 0.1.0
+
+flutter:
+  plugin:
+    androidPackage: com.matheusvillela.flutter.plugins.qrcodereader
+    pluginClass: QRCodeReaderPlugin
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+environment:
+    sdk: ">=1.8.0 <2.0.0"

@@ -1,0 +1,17 @@
+<manifest package="com.matheusvillela.flutter.plugins.qrcodereader"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="1"
+          android:versionName="0.0.1">
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="21"/>
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <application>
+        <activity
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:name=".QRScanActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"/>
+    </application>
+</manifest>
