@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package io.flutter.plugins.imagepickerexample;
+package com.matheusvillela.flutter.plugins.qrcodereaderexample;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

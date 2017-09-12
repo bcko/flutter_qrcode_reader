@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.flutter.plugins.imagepickerexample"
+    package="com.matheusvillela.flutter.plugins.qrcodereaderexample"
     android:versionCode="1"
     android:versionName="0.0.1">
 
@@ -15,7 +15,7 @@
          In most cases you can leave this as-is, but you if you want to provide
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
-    <application android:name="io.flutter.app.FlutterApplication" android:label="Image Picker Example" android:icon="@mipmap/ic_launcher">
+    <application android:name="io.flutter.app.FlutterApplication" android:label="QR Code Reader Example" android:icon="@mipmap/ic_launcher">
         <activity android:name=".MainActivity"
                   android:launchMode="singleTop"
                   android:theme="@android:style/Theme.Black.NoTitleBar"

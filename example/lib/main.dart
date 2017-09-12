@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'QRCode Scanner Demo',
+      title: 'QRCode Reader Demo',
       home: new MyHomePage(),
     );
   }
@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: const Text('QRCode Scanner Example'),
+        title: const Text('QRCode Reader Example'),
       ),
       body: new Center(
           child: new FutureBuilder<String>(
@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 .scan();
           });
         },
-        tooltip: 'Scan the QRCode',
+        tooltip: 'Reader the QRCode',
         child: new Icon(Icons.add_a_photo),
       ),
     );

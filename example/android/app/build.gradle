@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "io.flutter.plugins.imagepicker.example"
+        applicationId "com.matheusvillela.flutter.plugins.qrcodereaderexample"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
