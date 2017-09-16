@@ -30,6 +30,7 @@ import android.os.Process;
 
 import java.util.Map;
 
+import io.flutter.app.FlutterActivity;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -37,24 +38,27 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener;
 
-public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultListener {
+public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultListener, PluginRegistry.RequestPermissionResultListener {
     private static final String CHANNEL = "qrcode_reader";
 
     private static final int REQUEST_CODE_SCAN_ACTIVITY = 2777;
+    private static final int REQUEST_CODE_CAMERA_PERMISSION = 3777;
     private static QRCodeReaderPlugin instance;
 
-    private Activity activity;
+    private FlutterActivity activity;
     private Result pendingResult;
+    private Map<String, Object> arguments;
 
-    public QRCodeReaderPlugin(Activity activity) {
+    public QRCodeReaderPlugin(FlutterActivity activity) {
         this.activity = activity;
     }
 
     public static void registerWith(PluginRegistry.Registrar registrar) {
         if (instance == null) {
             final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL);
-            instance = new QRCodeReaderPlugin(registrar.activity());
+            instance = new QRCodeReaderPlugin((FlutterActivity) registrar.activity());
             registrar.addActivityResultListener(instance);
+            registrar.addRequestPermissionResultListener(instance);
             channel.setMethodCallHandler(instance);
         }
     }
@@ -71,6 +75,7 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
             if (!(call.arguments instanceof Map)) {
                 throw new IllegalArgumentException("Plugin not passing a map as parameter: " + call.arguments);
             }
+            arguments = (Map<String, Object>) call.arguments;
             int currentApiVersion = android.os.Build.VERSION.SDK_INT;
             if (currentApiVersion >= android.os.Build.VERSION_CODES.M) {
                 if (checkSelfPermission(activity,
@@ -79,17 +84,15 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
                     if (shouldShowRequestPermissionRationale(activity,
                             Manifest.permission.CAMERA)) {
                         // TODO: user should be explained why the app needs the permission
-                        activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
+                        activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
                     } else {
-                        activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
+                        activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
                     }
-                    pendingResult.error("permission", "you don't have the user permission to access the camera", null);
-                    pendingResult = null;
                 } else {
-                    startView((Map<String, Object>) call.arguments);
+                    startView();
                 }
             } else {
-                startView((Map<String, Object>) call.arguments);
+                startView();
             }
         } else {
             throw new IllegalArgumentException("Unknown method " + call.method);
@@ -112,7 +115,7 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
     }
 
 
-    private void startView(Map<String, Object> arguments) {
+    private void startView() {
         Intent intent = new Intent(activity, QRScanActivity.class);
         intent.putExtra(QRScanActivity.EXTRA_FOCUS_INTERVAL, (int) arguments.get("autoFocusIntervalInMs"));
         intent.putExtra(QRScanActivity.EXTRA_FORCE_FOCUS, (boolean) arguments.get("forceAutoFocus"));
@@ -130,7 +133,29 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
                 pendingResult.success(null);
             }
             pendingResult = null;
+            arguments = null;
             return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == REQUEST_CODE_CAMERA_PERMISSION) {
+            for (int i = 0; i < permissions.length; i++) {
+                String permission = permissions[i];
+                int grantResult = grantResults[i];
+
+                if (permission.equals(Manifest.permission.CAMERA)) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                        startView();
+                    } else {
+                        pendingResult.error("permission", "you don't have the user permission to access the camera", null);
+                        pendingResult = null;
+                        arguments = null;
+                    }
+                }
+            }
         }
         return false;
     }
