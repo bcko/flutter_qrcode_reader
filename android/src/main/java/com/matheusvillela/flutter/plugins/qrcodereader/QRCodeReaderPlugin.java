@@ -20,8 +20,13 @@
 
 package com.matheusvillela.flutter.plugins.qrcodereader;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Process;
 
 import java.util.Map;
 
@@ -66,15 +71,51 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
             if (!(call.arguments instanceof Map)) {
                 throw new IllegalArgumentException("Plugin not passing a map as parameter: " + call.arguments);
             }
-            Map<String, Object> arguments = (Map<String, Object>) call.arguments;
-            Intent intent = new Intent(activity, QRScanActivity.class);
-            intent.putExtra(QRScanActivity.EXTRA_FOCUS_INTERVAL, (int) arguments.get("autoFocusIntervalInMs"));
-            intent.putExtra(QRScanActivity.EXTRA_FORCE_FOCUS, (boolean) arguments.get("forceAutoFocus"));
-            intent.putExtra(QRScanActivity.EXTRA_TORCH_ENABLED, (boolean) arguments.get("torchEnabled"));
-            activity.startActivityForResult(intent, REQUEST_CODE_SCAN_ACTIVITY);
+            int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+            if (currentApiVersion >= android.os.Build.VERSION_CODES.M) {
+                if (checkSelfPermission(activity,
+                        Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    if (shouldShowRequestPermissionRationale(activity,
+                            Manifest.permission.CAMERA)) {
+                        // TODO: user should be explained why the app needs the permission
+                        activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
+                    } else {
+                        activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
+                    }
+                } else {
+                    startView((Map<String, Object>) call.arguments);
+                }
+            } else {
+                startView((Map<String, Object>) call.arguments);
+            }
         } else {
             throw new IllegalArgumentException("Unknown method " + call.method);
         }
+    }
+
+    private boolean shouldShowRequestPermissionRationale(Activity activity,
+                                                         String permission) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            return activity.shouldShowRequestPermissionRationale(permission);
+        }
+        return false;
+    }
+
+    private int checkSelfPermission(Context context, String permission) {
+        if (permission == null) {
+            throw new IllegalArgumentException("permission is null");
+        }
+        return context.checkPermission(permission, android.os.Process.myPid(), Process.myUid());
+    }
+
+
+    private void startView(Map<String, Object> arguments) {
+        Intent intent = new Intent(activity, QRScanActivity.class);
+        intent.putExtra(QRScanActivity.EXTRA_FOCUS_INTERVAL, (int) arguments.get("autoFocusIntervalInMs"));
+        intent.putExtra(QRScanActivity.EXTRA_FORCE_FOCUS, (boolean) arguments.get("forceAutoFocus"));
+        intent.putExtra(QRScanActivity.EXTRA_TORCH_ENABLED, (boolean) arguments.get("torchEnabled"));
+        activity.startActivityForResult(intent, REQUEST_CODE_SCAN_ACTIVITY);
     }
 
     @Override
