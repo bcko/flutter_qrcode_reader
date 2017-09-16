@@ -83,6 +83,8 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
                     } else {
                         activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
                     }
+                    pendingResult.error("permission", "you don't have the user permission to access the camera", null);
+                    pendingResult = null;
                 } else {
                     startView((Map<String, Object>) call.arguments);
                 }
