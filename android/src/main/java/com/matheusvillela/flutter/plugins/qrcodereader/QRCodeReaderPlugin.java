@@ -78,31 +78,23 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
                 throw new IllegalArgumentException("Plugin not passing a map as parameter: " + call.arguments);
             }
             arguments = (Map<String, Object>) call.arguments;
-            boolean handlePermission = (boolean) arguments.get("handlePermissions");
-            this.executeAfterPermissionGranted = (boolean) arguments.get("executeAfterPermissionGranted");
-
-            int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-            if (currentApiVersion >= android.os.Build.VERSION_CODES.M) {
-                if (checkSelfPermission(activity,
-                        Manifest.permission.CAMERA)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    if (shouldShowRequestPermissionRationale(activity,
-                            Manifest.permission.CAMERA)) {
-                        // TODO: user should be explained why the app needs the permission
-                        if (handlePermission) {
-                            requestPermissions();
-                        } else {
-                            setNoPermissionsError();
-                        }
+            if (checkSelfPermission(activity,
+                    Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (shouldShowRequestPermissionRationale(activity,
+                        Manifest.permission.CAMERA)) {
+                    // TODO: user should be explained why the app needs the permission
+                    if (handlePermission) {
+                        requestPermissions();
                     } else {
-                        if (handlePermission) {
-                            requestPermissions();
-                        } else {
-                            setNoPermissionsError();
-                        }
+                        setNoPermissionsError();
                     }
                 } else {
-                    startView();
+                    if (handlePermission) {
+                        requestPermissions();
+                    } else {
+                        setNoPermissionsError();
+                    }
                 }
             } else {
                 startView();
