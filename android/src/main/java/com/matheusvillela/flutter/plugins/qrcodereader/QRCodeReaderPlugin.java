@@ -21,6 +21,7 @@
 package com.matheusvillela.flutter.plugins.qrcodereader;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -48,6 +49,7 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
     private FlutterActivity activity;
     private Result pendingResult;
     private Map<String, Object> arguments;
+    private boolean executeAfterPermissionGranted;
 
     public QRCodeReaderPlugin(FlutterActivity activity) {
         this.activity = activity;
@@ -76,41 +78,35 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
                 throw new IllegalArgumentException("Plugin not passing a map as parameter: " + call.arguments);
             }
             arguments = (Map<String, Object>) call.arguments;
-//             int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-//             if (currentApiVersion >= android.os.Build.VERSION_CODES.M) {
-//                 if (checkSelfPermission(activity,
-//                         Manifest.permission.CAMERA)
-//                         != PackageManager.PERMISSION_GRANTED) {
-//                     if (shouldShowRequestPermissionRationale(activity,
-//                             Manifest.permission.CAMERA)) {
-//                         // TODO: user should be explained why the app needs the permission
-//                         activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
-//                     } else {
-//                         activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
-//                     }
-//                 } else {
-//                     startView();
-//                 }
-//             } else {
-//                 startView();
-//             }
             if (checkSelfPermission(activity,
-                        Manifest.permission.CAMERA)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    if (shouldShowRequestPermissionRationale(activity,
-                            Manifest.permission.CAMERA)) {
-                        // TODO: user should be explained why the app needs the permission
-                        activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
+                    Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (shouldShowRequestPermissionRationale(activity,
+                        Manifest.permission.CAMERA)) {
+                    // TODO: user should be explained why the app needs the permission
+                    if (handlePermission) {
+                        requestPermissions();
                     } else {
-                        activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
+                        setNoPermissionsError();
                     }
                 } else {
-                    startView();
+                    if (handlePermission) {
+                        requestPermissions();
+                    } else {
+                        setNoPermissionsError();
+                    }
                 }
-            
+            } else {
+                startView();
+            }
         } else {
             throw new IllegalArgumentException("Unknown method " + call.method);
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void requestPermissions() {
+        activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
     }
 
     private boolean shouldShowRequestPermissionRationale(Activity activity,
@@ -162,15 +158,21 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
 
                 if (permission.equals(Manifest.permission.CAMERA)) {
                     if (grantResult == PackageManager.PERMISSION_GRANTED) {
-                        startView();
+                        if (executeAfterPermissionGranted) {
+                            startView();
+                        }
                     } else {
-                        pendingResult.error("permission", "you don't have the user permission to access the camera", null);
-                        pendingResult = null;
-                        arguments = null;
+                        setNoPermissionsError();
                     }
                 }
             }
         }
         return false;
+    }
+
+    private void setNoPermissionsError() {
+        pendingResult.error("permission", "you don't have the user permission to access the camera", null);
+        pendingResult = null;
+        arguments = null;
     }
 }
