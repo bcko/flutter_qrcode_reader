@@ -76,9 +76,25 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
                 throw new IllegalArgumentException("Plugin not passing a map as parameter: " + call.arguments);
             }
             arguments = (Map<String, Object>) call.arguments;
-            int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-            if (currentApiVersion >= android.os.Build.VERSION_CODES.M) {
-                if (checkSelfPermission(activity,
+//             int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+//             if (currentApiVersion >= android.os.Build.VERSION_CODES.M) {
+//                 if (checkSelfPermission(activity,
+//                         Manifest.permission.CAMERA)
+//                         != PackageManager.PERMISSION_GRANTED) {
+//                     if (shouldShowRequestPermissionRationale(activity,
+//                             Manifest.permission.CAMERA)) {
+//                         // TODO: user should be explained why the app needs the permission
+//                         activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
+//                     } else {
+//                         activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
+//                     }
+//                 } else {
+//                     startView();
+//                 }
+//             } else {
+//                 startView();
+//             }
+            if (checkSelfPermission(activity,
                         Manifest.permission.CAMERA)
                         != PackageManager.PERMISSION_GRANTED) {
                     if (shouldShowRequestPermissionRationale(activity,
@@ -91,9 +107,7 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
                 } else {
                     startView();
                 }
-            } else {
-                startView();
-            }
+            
         } else {
             throw new IllegalArgumentException("Unknown method " + call.method);
         }
