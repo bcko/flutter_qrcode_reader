@@ -21,6 +21,7 @@
 package com.matheusvillela.flutter.plugins.qrcodereader;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -77,8 +78,8 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
                 throw new IllegalArgumentException("Plugin not passing a map as parameter: " + call.arguments);
             }
             arguments = (Map<String, Object>) call.arguments;
-            boolean handlePermission = arguments.get("handlePermissions"));
-            this.executeAfterPermissionGranted = arguments.get("executeAfterPermissionGranted"));
+            boolean handlePermission = (boolean) arguments.get("handlePermissions");
+            this.executeAfterPermissionGranted = (boolean) arguments.get("executeAfterPermissionGranted");
 
             int currentApiVersion = android.os.Build.VERSION.SDK_INT;
             if (currentApiVersion >= android.os.Build.VERSION_CODES.M) {
@@ -111,6 +112,7 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private void requestPermissions() {
         activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
     }

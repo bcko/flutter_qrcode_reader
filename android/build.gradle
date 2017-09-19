@@ -42,5 +42,5 @@ dependencies {
     compile('com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.2@aar') {
         transitive = true
     }
-//    provided files('tmplibs/flutter.jar')
+    provided files('tmplibs/flutter.jar')
 }
