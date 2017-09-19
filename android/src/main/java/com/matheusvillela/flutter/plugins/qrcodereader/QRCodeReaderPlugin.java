@@ -78,6 +78,9 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
                 throw new IllegalArgumentException("Plugin not passing a map as parameter: " + call.arguments);
             }
             arguments = (Map<String, Object>) call.arguments;
+            boolean handlePermission = (boolean) arguments.get("handlePermissions");
+            this.executeAfterPermissionGranted = (boolean) arguments.get("executeAfterPermissionGranted");
+
             if (checkSelfPermission(activity,
                     Manifest.permission.CAMERA)
                     != PackageManager.PERMISSION_GRANTED) {
