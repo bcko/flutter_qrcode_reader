@@ -71,6 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 .setAutoFocusIntervalInMs(200)
                 .setForceAutoFocus(true)
                 .setTorchEnabled(true)
+                .setHandlePermissions(true)
+                .setExecuteAfterPermissionGranted(true)
                 .scan();
           });
         },

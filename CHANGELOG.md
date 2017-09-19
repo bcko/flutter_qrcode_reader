@@ -1,15 +1,21 @@
-## 0.1.0
+## 0.2.0
 
-* Initial Release
+* Configurable permission behaviour
 
-## 0.1.2
+## 0.1.4
 
-* Asking camera permissions
+* If the permission was granted the camera will open
 
 ## 0.1.3
 
 * When the app does not have the camera permission an error is sent in the result
 
-## 0.1.4
+## 0.1.2
 
-* If the permission was granted the camera will open
+* Asking camera permissions
+
+## 0.1.0
+
+* Initial Release
+
+
