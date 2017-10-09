@@ -16,6 +16,9 @@
 static FlutterMethodChannel *channel;
 
 @interface QRCodeReaderPlugin : NSObject<FlutterPlugin>
+//+ (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry;
++ (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar;
 @property (nonatomic, retain) UIViewController *viewController;
 //@property (nonatomic, retain) WebviewController *webviewController;
 @end
+
