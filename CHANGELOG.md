@@ -1,3 +1,7 @@
+## 0.3.1
+
+* iOS orientation change fix
+
 ## 0.3.0
 
 * iOS support
