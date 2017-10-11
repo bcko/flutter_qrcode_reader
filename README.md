@@ -1,6 +1,6 @@
 # QRCode Reader plugin for Flutter
 
-A Flutter plugin, currently for Android only, for reading QR Codes with the camera.
+A Flutter plugin for reading QR Codes with the camera.
 
 ### Example
 
@@ -16,4 +16,9 @@ Future<String> futureString = new QRCodeReader()
                .setHandlePermissions(true) // default true
                .setExecuteAfterPermissionGranted(true) // default true
                .scan();
+```
+
+These options are Android only, this is the simplest way of plugin usage:
+``` dart
+Future<String> futureString = new QRCodeReader().scan();
 ```

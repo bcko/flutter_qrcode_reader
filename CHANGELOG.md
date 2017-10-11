@@ -1,3 +1,7 @@
+## 0.3.0
+
+* iOS support
+
 ## 0.2.0
 
 * Configurable permission behaviour
