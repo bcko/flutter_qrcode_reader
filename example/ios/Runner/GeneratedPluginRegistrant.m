@@ -3,7 +3,7 @@
 //
 
 #import "GeneratedPluginRegistrant.h"
-#import <qrcode_reader/QRCodeReaderPlugin.h>
+#import <qrcodereader/QRCodeReaderPlugin.h>
 
 @implementation GeneratedPluginRegistrant
 
