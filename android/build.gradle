@@ -1,31 +1,46 @@
+group 'com.matheusvillela.flutter.plugins.qrcodereader'
+version '1.0-SNAPSHOT'
+
 buildscript {
     repositories {
         jcenter()
-        maven {
-            url "https://maven.google.com"
-        }
+        maven { url "https://jitpack.io" }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
     }
 }
 
-allprojects {
+rootProject.allprojects {
     repositories {
         jcenter()
+        maven {
+            url "https://jitpack.io"
+        }
         maven {
             url "https://maven.google.com"
         }
     }
 }
 
-rootProject.buildDir = '../build'
-subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
-    project.evaluationDependsOn(':app')
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.3'
+
+    defaultConfig {
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+dependencies {
+    compile('com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.2@aar') {
+        transitive = true
+    }
+    provided files('tmplibs/flutter.jar')
 }
