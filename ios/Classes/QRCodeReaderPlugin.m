@@ -14,7 +14,6 @@ static FlutterMethodChannel *channel;
 -(BOOL)startReading;
 -(void)stopReading;
 @property (nonatomic, retain) UIViewController *viewController;
-
 @end
 
 @implementation QRCodeReaderPlugin {
@@ -54,13 +53,15 @@ float portraitheight;
     }
 }
 
-
 - (instancetype)initWithViewController:(UIViewController *)viewController {
     self = [super init];
     if (self) {
         _viewController = viewController;
         [self loadViewQRCode];
         [self viewQRCodeDidLoad];
+        [[ NSNotificationCenter defaultCenter]addObserver: self selector:@selector(rotate:)
+                                                     name:UIDeviceOrientationDidChangeNotification object:nil];
+        
     }
     return self;
 }
@@ -80,11 +81,6 @@ float portraitheight;
     // I just take the lowest value, and with rotation all will still be visible.
     height = [UIScreen mainScreen].applicationFrame.size.height;
     width = [UIScreen mainScreen].applicationFrame.size.width;
-    if (height < width){
-        width = height;
-    } else {
-        height = width;
-    }
 }
 
 //- (void)viewDidLoad {
@@ -94,9 +90,14 @@ float portraitheight;
     if (_viewController.interfaceOrientation == UIInterfaceOrientationPortrait || _viewController.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
         portraitheight =  [UIScreen mainScreen].applicationFrame.size.height;
         landscapeheight = [UIScreen mainScreen].applicationFrame.size.width;
+        height = portraitheight;
+        width  = landscapeheight;
     } else {
         landscapeheight =  [UIScreen mainScreen].applicationFrame.size.height;
         portraitheight = [UIScreen mainScreen].applicationFrame.size.width;
+        height = landscapeheight;
+        width  = portraitheight;
+
     }
     // Normally the subviews are loaded from a nib, but we do it all programmatically in Flutter style.
     _viewPreview = [[UIView alloc] initWithFrame:CGRectMake(width/4, height/4, width/2, height/2) ];
@@ -114,54 +115,27 @@ float portraitheight;
     
 }
 
-
-//TODO: make sure that in the case of a rotation, the layout is rerendered.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (UIInterfaceOrientationIsPortrait(interfaceOrientation) || UIInterfaceOrientationIsLandscape(interfaceOrientation));
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
-    //[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    if(UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
+- (void) rotate:(NSNotification *) notification{
+    if(UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])){
         //self.view = portraitView;
-        [self changeTheViewToPortrait:YES andDuration:duration];
-
-    }
-    else if(UIInterfaceOrientationIsLandscape(toInterfaceOrientation)){
-        //self.view = landscapeView;
-        [self changeTheViewToPortrait:NO andDuration:duration];
-    }
-}
-
-- (void) changeTheViewToPortrait:(BOOL)portrait andDuration:(NSTimeInterval)duration{
-    
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:duration];
-    
-    if(portrait){
-//        NSLog(@"portrait");
-        //change the view and subview frames for the portrait view
         height = portraitheight;
         width  = landscapeheight;
     }
-    else{
-//        NSLog(@"landscape");
+    else if(UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])){
+        //self.view = landscapeView;
         height = landscapeheight;
         width  = portraitheight;
-        //change the view and subview  frames for the landscape view
     }
     _viewPreview.frame = CGRectMake(width/4, height/4, width/2, height/2) ;
     _buttonStop.frame =  CGRectMake(width/2-width/4-(@"Stop".length)/2, (height/2)+(height/4), width/4, height/10);
+    [_videoPreviewLayer setFrame:_viewPreview.layer.bounds];
 
-    [UIView commitAnimations];
 }
 
 - (void)didReceiveMemoryWarning {
     //[super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-
 
 - (BOOL)startReading {
     if (_isReading) return NO;
