@@ -1,3 +1,7 @@
+## 0.3.2
+
+* iOS layout fixes
+
 ## 0.3.1
 
 * iOS orientation change fix
