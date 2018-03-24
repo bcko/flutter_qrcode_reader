@@ -60,7 +60,7 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
             final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL);
             instance = new QRCodeReaderPlugin((FlutterActivity) registrar.activity());
             registrar.addActivityResultListener(instance);
-            registrar.addRequestPermissionResultListener(instance);
+            registrar.addRequestPermissionsResultListener(instance);
             channel.setMethodCallHandler(instance);
         }
     }
