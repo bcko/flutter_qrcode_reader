@@ -39,7 +39,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener;
 
-public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultListener, PluginRegistry.RequestPermissionResultListener {
+public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultListener, PluginRegistry.RequestPermissionsResultListener {
     private static final String CHANNEL = "qrcode_reader";
 
     private static final int REQUEST_CODE_SCAN_ACTIVITY = 2777;
@@ -153,7 +153,7 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
     }
 
     @Override
-    public boolean onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
+    public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == REQUEST_CODE_CAMERA_PERMISSION) {
             for (int i = 0; i < permissions.length; i++) {
                 String permission = permissions[i];
