@@ -39,7 +39,7 @@ android {
 }
 
 dependencies {
-    compile('com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.2@aar') {
+    implementation('com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.2@aar') {
         transitive = true
     }
 //    provided files('tmplibs/flutter.jar')
