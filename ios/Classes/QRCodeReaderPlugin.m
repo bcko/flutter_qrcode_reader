@@ -1,14 +1,13 @@
-// Copyright 2017 Johan Henselmans. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
 #import "QRCodeReaderPlugin.h"
-static NSString *const CHANNEL_NAME = @"qrcode_reader";
+
+
+static NSString *const CHANNEL_NAME = @"qrcodereader";
 static FlutterMethodChannel *channel;
 
 @interface QRCodeReaderPlugin()<AVCaptureMetadataOutputObjectsDelegate>
 @property (nonatomic, strong) UIView *viewPreview;
 @property (nonatomic, strong) UIView *qrcodeview;
-@property (nonatomic, strong) UIButton *buttonStop;
+@property (nonatomic, strong) UIButton *buttonBack;
 @property (nonatomic) BOOL isReading;
 @property (nonatomic, strong) AVCaptureSession *captureSession;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *videoPreviewLayer;
@@ -25,8 +24,6 @@ static FlutterMethodChannel *channel;
 }
 float height;
 float width;
-float landscapeheight;
-float portraitheight;
 
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
@@ -63,8 +60,6 @@ float portraitheight;
         //_viewController.view.backgroundColor = [UIColor  colorWithWhite:0.0 alpha:0.0];
         _viewController.view.backgroundColor = [UIColor  clearColor];
         _viewController.view.opaque = NO;
-        [[ NSNotificationCenter defaultCenter]addObserver: self selector:@selector(rotate:)
-                                                     name:UIDeviceOrientationDidChangeNotification object:nil];
     }
     return self;
 }
@@ -89,12 +84,8 @@ float portraitheight;
 -(void)loadViewQRCode
 {
     //NSLog(@"loading QRCodeView");
-    portraitheight = height = [UIScreen mainScreen].applicationFrame.size.height;
-    landscapeheight = width = [UIScreen mainScreen].applicationFrame.size.width;
-    if(UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])){
-        landscapeheight = height;
-        portraitheight = width;
-    }
+    height = [UIScreen mainScreen].applicationFrame.size.height;
+    width = [UIScreen mainScreen].applicationFrame.size.width;
     //_viewController.view.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.0];
     //_viewController.view.opaque = NO;
     _qrcodeview= [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height) ];
@@ -109,38 +100,18 @@ float portraitheight;
 - (void)viewQRCodeDidLoad {
     
     // Normally the subviews are loaded from a nib, but we do it all programmatically in Flutter style.
-    _viewPreview = [[UIView alloc] initWithFrame:CGRectMake(width/4, height/4, width/2, height/2) ];
+    _viewPreview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height+height/10) ];
     _viewPreview.backgroundColor = [UIColor blackColor];
     [_qrcodeViewController.view addSubview:_viewPreview];
-    _buttonStop =  [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    _buttonStop.frame =  CGRectMake(width/2-width/4-(@"Stop".length)/2, (height/2)+(height/4), width/4, height/10);
-    [_buttonStop setTitle:@"Stop"forState:UIControlStateNormal];
-    [_buttonStop addTarget:self action:@selector(stopReading) forControlEvents:UIControlEventTouchUpInside];
-    [_qrcodeViewController.view addSubview:_buttonStop];
+    _buttonBack =  [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    _buttonBack.frame =  CGRectMake(width/2-width/8, height-height/20, width/4, height/20);
+    [_buttonBack setTitle:@"BACK"forState:UIControlStateNormal];
+    [_buttonBack addTarget:self action:@selector(stopReading) forControlEvents:UIControlEventTouchUpInside];
+    [_qrcodeViewController.view addSubview:_buttonBack];
 
     _captureSession = nil;
     _isReading = NO;
     
-}
-
-- (void) rotate:(NSNotification *) notification{
-    if(UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])){
-    //    NSLog(@"portrait");
-        height = portraitheight;
-        width  = landscapeheight;
-    }
-    else {
-    //    NSLog(@"landscape");
-        height = landscapeheight;
-        width  = portraitheight;
-    }
-    //NSLog(@"w: %f, h: %f",width, height);
-    _qrcodeview.frame = CGRectMake(0, 0, width, height) ;
-    _viewPreview.frame = CGRectMake(width/4, height/4, width/2, height/2) ;
-    _buttonStop.frame =  CGRectMake(width/2-width/4-(@"Stop".length)/2, (height/2)+(height/4), width/4, height/10);
-    [_videoPreviewLayer setFrame:_viewPreview.layer.bounds];
-    [_qrcodeViewController viewWillLayoutSubviews];
-
 }
 
 - (void)didReceiveMemoryWarning {
@@ -201,12 +172,13 @@ float portraitheight;
     [_videoPreviewLayer removeFromSuperlayer];
     _isReading = NO;
     [self closeQRCodeView];
-    _result(@"stopped");
+    _result(nil);
 }
 
 
 
 
 @end
+
 
 
