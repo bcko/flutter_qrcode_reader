@@ -1,6 +1,6 @@
 #import "QRCodeReaderPlugin.h"
 
-static NSString *const CHANNEL_NAME = @"qrcodereader";
+static NSString *const CHANNEL_NAME = @"qrcode_reader";
 static FlutterMethodChannel *channel;
 
 @interface QRCodeReaderPlugin()<AVCaptureMetadataOutputObjectsDelegate>
