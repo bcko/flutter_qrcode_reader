@@ -5,7 +5,7 @@ A Flutter plugin for reading QR Codes with the camera.
 ### Example
 
 ``` dart
-import 'package:qrcode_reader/QRCodeReader.dart';
+import 'package:qrcode_reader/qrcode_reader.dart';
 ```
 
 ``` dart
