@@ -21,7 +21,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:qrcode_reader/QRCodeReader.dart';
+import 'package:qrcode_reader/qrcode_reader.dart';
 
 void main() {
   runApp(new MyApp());
