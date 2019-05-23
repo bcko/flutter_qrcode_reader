@@ -15,10 +15,11 @@ Future<String> futureString = new QRCodeReader()
                .setTorchEnabled(true) // default false
                .setHandlePermissions(true) // default true
                .setExecuteAfterPermissionGranted(true) // default true
+               .setFrontCamera(false) // default false
                .scan();
 ```
 
-These options are Android only, this is the simplest way of plugin usage:
+These options are Android only (with the exception of setFrontCamera(bool)), this is the simplest way of plugin usage:
 ``` dart
 Future<String> futureString = new QRCodeReader().scan();
 ```

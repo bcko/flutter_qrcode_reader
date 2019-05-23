@@ -14,6 +14,7 @@ static FlutterMethodChannel *channel;
 -(void)stopReading;
 @property (nonatomic, retain) UIViewController *viewController;
 @property (nonatomic, retain) UIViewController *qrcodeViewController;
+@property (nonatomic) BOOL isFrontCamera;
 @end
 
 @implementation QRCodeReaderPlugin {
@@ -39,6 +40,9 @@ float portraitheight;
 
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary *args = (NSDictionary *)call.arguments;
+    self.isFrontCamera = [[args objectForKey: @"frontCamera"] boolValue];
+
     if ([@"getPlatformVersion" isEqualToString:call.method]) {
         result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
     } else if ([@"readQRCode" isEqualToString:call.method]) {
@@ -115,7 +119,15 @@ float portraitheight;
     if (_isReading) return NO;
     _isReading = YES;
     NSError *error;
-    AVCaptureDevice *captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    AVCaptureDevice *captureDevice;
+    if ([self isFrontCamera]) {
+        captureDevice = [AVCaptureDevice defaultDeviceWithDeviceType: AVCaptureDeviceTypeBuiltInWideAngleCamera
+                                                                                mediaType: AVMediaTypeVideo
+                                                                                position: AVCaptureDevicePositionFront];
+    } else {
+        captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    }
+
     AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:captureDevice error:&error];
     if (!input) {
         NSLog(@"%@", [error localizedDescription]);

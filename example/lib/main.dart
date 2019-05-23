@@ -73,6 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 .setTorchEnabled(true)
                 .setHandlePermissions(true)
                 .setExecuteAfterPermissionGranted(true)
+                .setFrontCamera(false)
                 .scan();
           });
         },
