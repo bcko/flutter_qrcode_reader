@@ -163,15 +163,15 @@ float portraitheight;
 
 
 - (void) rotate:(NSNotification *) notification{
-    if([[UIDevice currentDevice] orientation] == 1){
-    height = portraitheight;
-    width = landscapeheight;
-    _buttonCancel.frame = CGRectMake(width/2-width/8, height-height/20, width/4, height/20);
-    }
-    else {
-    height = landscapeheight;
-    width = portraitheight;
-    _buttonCancel.frame = CGRectMake(width/2-width/8, height-height/10, width/4, height/20);
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    if (orientation == 1) {
+        height = portraitheight;
+        width = landscapeheight;
+        _buttonCancel.frame = CGRectMake(width/2-width/8, height-height/20, width/4, height/20);
+    } else {
+        height = landscapeheight;
+        width = portraitheight;
+        _buttonCancel.frame = CGRectMake(width/2-width/8, height-height/10, width/4, height/20);
     }
     _qrcodeview.frame = CGRectMake(0, 0, width, height) ;
     _viewPreview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height+height/10) ];
