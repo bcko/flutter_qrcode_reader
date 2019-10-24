@@ -29,8 +29,8 @@ float portraitheight;
 
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-    FlutterMethodChannel* channel = [FlutterMethodChannel 
-                                     methodChannelWithName:CHANNEL_NAME 
+    FlutterMethodChannel* channel = [FlutterMethodChannel
+                                     methodChannelWithName:CHANNEL_NAME
                                      binaryMessenger:[registrar messenger]];
     UIViewController *viewController =
     [UIApplication sharedApplication].delegate.window.rootViewController;
@@ -73,6 +73,14 @@ float portraitheight;
 - (void)showQRCodeView:(FlutterMethodCall*)call {
     _qrcodeViewController = [[UIViewController alloc] init];
     [_viewController presentViewController:_qrcodeViewController animated:NO completion:nil];
+
+    if (@available(iOS 13.0, *)) {
+        [_qrcodeViewController setModalInPresentation:(true) ];
+        // [_qrcodeViewController setModalPresentationStyle:(UIModalPresentationFullScreen) ];
+    } else {
+        // Fallback on earlier versions
+    }
+
     [self loadViewQRCode];
     [self viewQRCodeDidLoad];
     [self startReading];
@@ -105,7 +113,14 @@ float portraitheight;
     _viewPreview.backgroundColor = [UIColor whiteColor];
     [_qrcodeViewController.view addSubview:_viewPreview];
     _buttonCancel = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    _buttonCancel.frame = CGRectMake(width/2-width/8, height-height/20, width/4, height/20);
+
+    if (@available(iOS 13.0, *)) {
+        _buttonCancel.frame = CGRectMake(width/2-width/8, (height-height/20)-30, width/4, height/20);
+    } else {
+        // Fallback on earlier versions
+        _buttonCancel.frame = CGRectMake(width/2-width/8, height-height/20, width/4, height/20);
+    }
+
     [_buttonCancel setTitle:@"CANCEL"forState:UIControlStateNormal];
     [_buttonCancel addTarget:self action:@selector(stopReading) forControlEvents:UIControlEventTouchUpInside];
     [_qrcodeViewController.view addSubview:_buttonCancel];
@@ -113,7 +128,6 @@ float portraitheight;
     _isReading = NO;
 
 }
-
 
 - (BOOL)startReading {
     if (_isReading) return NO;
@@ -167,7 +181,13 @@ float portraitheight;
     if (orientation == 1) {
         height = portraitheight;
         width = landscapeheight;
-        _buttonCancel.frame = CGRectMake(width/2-width/8, height-height/20, width/4, height/20);
+
+        if (@available(iOS 13.0, *)) {
+            _buttonCancel.frame = CGRectMake(width/2-width/8, (height-height/20)-30, width/4, height/20);
+        } else {
+            // Fallback on earlier versions
+            _buttonCancel.frame = CGRectMake(width/2-width/8, height-height/20, width/4, height/20);
+        }
     } else {
         height = landscapeheight;
         width = portraitheight;
