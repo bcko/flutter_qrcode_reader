@@ -138,7 +138,7 @@ public class QRCodeReaderPlugin implements MethodCallHandler, ActivityResultList
 
     @Override
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_SCAN_ACTIVITY) {
+        if (requestCode == REQUEST_CODE_SCAN_ACTIVITY && pendingResult != null) {
             if (resultCode == Activity.RESULT_OK) {
                 String string = data.getStringExtra(QRScanActivity.EXTRA_RESULT);
                 pendingResult.success(string);
