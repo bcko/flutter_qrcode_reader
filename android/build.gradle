@@ -3,23 +3,28 @@ version '1.0-SNAPSHOT'
 
 buildscript {
     repositories {
+        google()
         jcenter()
+	maven {
+            url 'https://maven.google.com/'
+        }
         maven { url "https://jitpack.io" }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:3.3.0'
     }
 }
 
 rootProject.allprojects {
     repositories {
-        jcenter()
-        maven {
-            url "https://jitpack.io"
-        }
+    	google()
+ 	jcenter()
         maven {
             url "https://maven.google.com"
+        }
+        maven {
+            url "https://jitpack.io"
         }
     }
 }
@@ -30,7 +35,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
         disable 'InvalidPackage'
@@ -38,7 +43,7 @@ android {
 }
 
 dependencies {
-    implementation('com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.2@aar') {
+    implementation('com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3@aar') {
         transitive = true
     }
 //    provided files('tmplibs/flutter.jar')
