@@ -19,7 +19,7 @@ buildscript {
 rootProject.allprojects {
     repositories {
     	google()
- 	jcenter()
+ 	   jcenter()
         maven {
             url "https://maven.google.com"
         }
@@ -36,15 +36,15 @@ android {
 
     defaultConfig {
         testInstrumentationRunner "androidx.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
         disable 'InvalidPackage'
     }
-}
+
 
 dependencies {
     implementation('com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3@aar') {
         transitive = true
     }
-//    provided files('tmplibs/flutter.jar')
 }
