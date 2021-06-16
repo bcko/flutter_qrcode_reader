@@ -41,7 +41,7 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
-
+}
 
 dependencies {
     implementation('com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3@aar') {
