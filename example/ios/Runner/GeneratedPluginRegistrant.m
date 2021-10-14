@@ -3,7 +3,12 @@
 //
 
 #import "GeneratedPluginRegistrant.h"
+
+#if __has_include(<qrcode_reader/QRCodeReaderPlugin.h>)
 #import <qrcode_reader/QRCodeReaderPlugin.h>
+#else
+@import qrcode_reader;
+#endif
 
 @implementation GeneratedPluginRegistrant
 

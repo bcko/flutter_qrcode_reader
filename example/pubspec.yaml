@@ -40,3 +40,6 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+
+environment:
+  sdk: '>=2.10.0 <3.0.0'
